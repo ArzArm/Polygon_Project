@@ -23,4 +23,12 @@ public class ConvertorController {
                                                @RequestParam (required = false) Boolean flag) throws JsonProcessingException {
         return convertorService.findAllByDate(from, to, flag);
     }
+    @GetMapping("/{priceName}")
+    public List<EuroToUsd> findConvertorByAnyPrice(@PathVariable String priceName, @RequestParam (required = false)Double min,
+                                                   @RequestParam (required = false) Double max) {
+        return convertorService.findEuroToUsdByAnyPriceBetween(min, max, priceName);
+    }
+
+
+
 }

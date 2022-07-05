@@ -17,16 +17,15 @@ import java.util.List;
 public class PolygonClient {
 
     @Value("${url}")
-    String url;
+     String url;
     @Value("${apiKey}")
     private String apiKey;
 
-
-    public List<EuroToUsd> getConvertorList(PolygonUrl url) throws JsonProcessingException {
+    public List<EuroToUsd> getConvertorList(PolygonUrl polygonUrl) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(this.url + "/" + url.getCurrencyPair() + "/" + "range" + "/"
-                + url.getMultiplier() + "/" + url.getTimespan() + "/" + url.getFrom() + "/" + url.getTo() + "?adjusted=" + url.getAdjusted()
-                + "&sort=" + url.getSort() + "&limit=" + url.getLimit() + "&apiKey=" + apiKey, String.class);
+        String response = restTemplate.getForObject(this.url + "/" + polygonUrl.getCurrencyPair() + "/" + "range" + "/"
+                + polygonUrl.getMultiplier() + "/" + polygonUrl.getTimespan() + "/" + polygonUrl.getFrom() + "/" + polygonUrl.getTo() + "?adjusted=" + polygonUrl.getAdjusted()
+                + "&sort=" + polygonUrl.getSort() + "&limit=" + polygonUrl.getLimit() + "&apiKey=" + apiKey, String.class);
         JSONObject jsonObject = new JSONObject(response);
         JSONArray resultsArray = new JSONArray(jsonObject.get("results").toString());
         List<EuroToUsd> euroToUsdList = new ArrayList<>();
@@ -38,6 +37,5 @@ public class PolygonClient {
         }
         return euroToUsdList;
     }
-
 
 }

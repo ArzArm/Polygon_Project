@@ -3,50 +3,59 @@ package com.example.spring.builder;
 import java.sql.Date;
 
 public class PolygonUrlBuilder {
-    private String currencyPair;
-    private int multiplier;
-    private String timespan;
-    private Date from;
-    private Date to;
-    private Boolean adjusted;
-    private String sort;
-    private int limit;
+    protected String currencyPair;
+    protected int multiplier;
+    protected String timespan;
+    protected Date from;
+    protected Date to;
+    protected Boolean adjusted;
+    protected String sort;
+    protected int limit;
 
 
-    public void setCurrencyPair(String currencyPair) {
+    public PolygonUrlBuilder setCurrencyPair(String currencyPair) {
         this.currencyPair = currencyPair;
+        return this;
     }
 
-    public void setMultiplier(Integer multiplier) {
+    public PolygonUrlBuilder setMultiplier(Integer multiplier) {
         this.multiplier = multiplier;
+        return this;
     }
 
-    public void setTimespan(String timespan) {
+    public PolygonUrlBuilder setTimespan(String timespan) {
         this.timespan = timespan;
+        return this;
     }
 
-    public void setDateFrom(Date from) {
+    public PolygonUrlBuilder setDateFrom(Date from) {
         this.from = from;
+        return this;
     }
 
-    public void setDateTo(Date to) {
+    public PolygonUrlBuilder setDateTo(Date to) {
         this.to = to;
+        return this;
     }
 
 
-    public void setAdjusted(Boolean adjusted) {
+    public PolygonUrlBuilder setAdjusted(Boolean adjusted) {
         this.adjusted = adjusted;
+        return this;
     }
 
-    public void setSort(String sort) {
+    public PolygonUrlBuilder setSort(String sort) {
         this.sort = sort;
+        return this;
     }
 
-    public void setLimit(Integer limit) {
+    public PolygonUrlBuilder setLimit(Integer limit) {
         this.limit = limit;
+        return this;
     }
 
-    public PolygonUrl getResult() {
-        return new PolygonUrl(currencyPair, multiplier, timespan, from, to, adjusted, sort, limit);
+    public PolygonUrl build() {
+        return new PolygonUrl(this);
     }
+
 }

@@ -16,15 +16,17 @@ public class PolygonUrl {
     private String sort;
     private int limit;
 
-    protected PolygonUrl(String currencyPair, int multiplier, String timespan, Date from, Date to, Boolean adjusted, String sort, int limit) {
-        this.currencyPair = currencyPair;
-        this.multiplier = multiplier;
-        this.timespan = timespan;
-        this.from = from;
-        this.to = to;
-        this.adjusted = adjusted;
-        this.sort = sort;
-        this.limit = limit;
+    public PolygonUrl(PolygonUrlBuilder polygonUrlBuilder) {
+        this.currencyPair = polygonUrlBuilder.currencyPair;
+        this.multiplier = polygonUrlBuilder.multiplier;
+        this.timespan = polygonUrlBuilder.timespan;
+        this.from = polygonUrlBuilder.from;
+        this.to = polygonUrlBuilder.to;
+        this.adjusted = polygonUrlBuilder.adjusted;
+        this.sort = polygonUrlBuilder.sort;
+        this.limit = polygonUrlBuilder.limit;
+
     }
+
 
 }

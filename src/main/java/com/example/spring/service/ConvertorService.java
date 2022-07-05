@@ -20,38 +20,52 @@ public class ConvertorService {
     @Autowired
     PolygonClient polygonClient;
 
-    PolygonUrlBuilder builder = new PolygonUrlBuilder();
 
-    public void createPolygonUrl(PolygonUrlBuilder builder){
-        builder.setCurrencyPair("C:EURUSD");
-        builder.setMultiplier(1);
-        builder.setTimespan("day");
-        builder.setDateFrom(Date.valueOf("2021-06-22"));
-        builder.setDateTo(Date.valueOf("2021-07-22"));
-        builder.setAdjusted(true);
-        builder.setSort("asc");
-        builder.setLimit(120);
-    }
+    PolygonUrl polygonUrl = new PolygonUrlBuilder()
+            .setCurrencyPair("C:EURUSD")
+            .setMultiplier(1)
+            .setTimespan("day")
+            .setDateFrom(Date.valueOf("2021-06-22"))
+            .setDateTo(Date.valueOf("2021-07-22"))
+            .setAdjusted(true)
+            .setSort("asc")
+            .setLimit(120).build();
 
-    public void saveAllEuroToUsd () throws JsonProcessingException {
-        createPolygonUrl(builder);
-        euroToUsdRepository.saveAll(polygonClient.getConvertorList( builder.getResult()));
+
+    public void saveAllEuroToUsd() throws JsonProcessingException {
+        euroToUsdRepository.saveAll(polygonClient.getConvertorList(polygonUrl));
     }
 
     public List<EuroToUsd> findAllByDate(Date from, Date to, boolean flag) throws JsonProcessingException {
-        createPolygonUrl(builder);
-        PolygonUrl polygonUrl = builder.getResult();
-
-        if (flag || from.before(polygonUrl.getFrom()) || to.after(polygonUrl.getTo())){
+        if (flag || from.before(polygonUrl.getFrom()) || to.after(polygonUrl.getTo())) {
             polygonUrl.setFrom(from);
             polygonUrl.setTo(to);
             List<EuroToUsd> euroToUsdList = polygonClient.getConvertorList(polygonUrl);
             AtomicInteger i = new AtomicInteger(1);
             euroToUsdList.forEach(euroToUsd -> euroToUsd.setId(i.getAndIncrement()));
+
             return euroToUsdList;
         }
 
-        return euroToUsdRepository.findAllEuroToUsd(from, to);
+        return euroToUsdRepository.findAllEuroToUsdByDate(from, to);
     }
+
+    public List<EuroToUsd> findEuroToUsdByAnyPriceBetween(Double min, Double max, String priceName) {
+        if (priceName.equals("average")) {
+            return euroToUsdRepository.findEuroToUsdByAveragePriceIsBetween(min, max);
+        } else if (priceName.equals("open")) {
+            return euroToUsdRepository.findEuroToUsdByOpenPriceBetween(min, max);
+        } else if (priceName.equals("close")) {
+            return euroToUsdRepository.findEuroToUsdByClosePriceBetween(min, max);
+        } else if (priceName.equals("highest")) {
+            return euroToUsdRepository.findEuroToUsdByHighestPriceBetween(min, max);
+        } else if (priceName.equals("lowest")) {
+            return euroToUsdRepository.findEuroToUsdByLowestPriceBetween(min, max);
+        }
+        return euroToUsdRepository.findAll();
+    }
+
+
+
 
 }

@@ -38,5 +38,4 @@ public class EuroToUsd {
     @JsonProperty("t")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd",timezone = "Asia/Yerevan")
     private Date date;
-
 }

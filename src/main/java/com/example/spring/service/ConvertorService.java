@@ -4,9 +4,11 @@ package com.example.spring.service;
 import com.example.spring.builder.PolygonUrl;
 import com.example.spring.builder.PolygonUrlBuilder;
 import com.example.spring.entity.EuroToUsd;
+import com.example.spring.exception.FailDataException;
 import com.example.spring.repository.EuroToUsdRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -36,33 +38,59 @@ public class ConvertorService {
         euroToUsdRepository.saveAll(polygonClient.getConvertorList(polygonUrl));
     }
 
+    public void updateEuroToUsdPrice(EuroToUsd euroToUsd, String priceType, Double price) {
+        RequestKeyValidation requestKeyValidation = new RequestKeyValidation();
+        if (requestKeyValidation.validation(priceType)) {
+            switch (priceType) {
+                case "averagePrice":
+                    euroToUsd.setAveragePrice(price);
+                    break;
+                case "openPrice":
+                    euroToUsd.setOpenPrice(price);
+                    break;
+                case "closePrice":
+                    euroToUsd.setClosePrice(price);
+                    break;
+                case "highestPrice":
+                    euroToUsd.setHighestPrice(price);
+                    break;
+                case "lowestPrice":
+                    euroToUsd.setLowestPrice(price);
+                    break;
+            }
+            euroToUsdRepository.save(euroToUsd);
+
+        }else {
+            throw new FailDataException("Fail input data '" + priceType + "' ");
+        }
+    }
+
     public List<EuroToUsd> findAllByDate(Date from, Date to, boolean flag) throws JsonProcessingException {
         if (flag || from.before(polygonUrl.getFrom()) || to.after(polygonUrl.getTo())) {
-            polygonUrl.setFrom(from);
-            polygonUrl.setTo(to);
-            List<EuroToUsd> euroToUsdList = polygonClient.getConvertorList(polygonUrl);
+            PolygonUrl newPolygonUrl = new PolygonUrlBuilder()
+                    .setLimit(polygonUrl.getLimit())
+                    .setTimespan(polygonUrl.getTimespan())
+                    .setAdjusted(polygonUrl.getAdjusted())
+                    .setCurrencyPair(polygonUrl.getCurrencyPair())
+                    .setSort(polygonUrl.getSort())
+                    .setMultiplier(polygonUrl.getMultiplier())
+                    .setDateFrom(from)
+                    .setDateTo(to).build();
+            List<EuroToUsd> euroToUsdList = polygonClient.getConvertorList(newPolygonUrl);
             AtomicInteger i = new AtomicInteger(1);
             euroToUsdList.forEach(euroToUsd -> euroToUsd.setId(i.getAndIncrement()));
-
             return euroToUsdList;
         }
 
         return euroToUsdRepository.findAllEuroToUsdByDate(from, to);
     }
 
-    public List<EuroToUsd> findEuroToUsdByAnyPriceBetween(Double min, Double max, String priceName) {
-        if (priceName.equals("average")) {
-            return euroToUsdRepository.findEuroToUsdByAveragePriceIsBetween(min, max);
-        } else if (priceName.equals("open")) {
-            return euroToUsdRepository.findEuroToUsdByOpenPriceBetween(min, max);
-        } else if (priceName.equals("close")) {
-            return euroToUsdRepository.findEuroToUsdByClosePriceBetween(min, max);
-        } else if (priceName.equals("highest")) {
-            return euroToUsdRepository.findEuroToUsdByHighestPriceBetween(min, max);
-        } else if (priceName.equals("lowest")) {
-            return euroToUsdRepository.findEuroToUsdByLowestPriceBetween(min, max);
-        }
-        return euroToUsdRepository.findAll();
+    public List<EuroToUsd> findBySearchCriteria(Specification<EuroToUsd> specification) {
+        return euroToUsdRepository.findAll(specification);
+
+    }
+    public void saveEuroToUsd(EuroToUsd euroToUsd){
+        euroToUsdRepository.save(euroToUsd);
     }
 
 

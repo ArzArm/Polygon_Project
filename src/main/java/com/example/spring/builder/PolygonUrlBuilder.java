@@ -1,7 +1,9 @@
 package com.example.spring.builder;
 
-import java.sql.Date;
+import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+@NoArgsConstructor
 public class PolygonUrlBuilder {
     protected String currencyPair;
     protected int multiplier;
@@ -11,7 +13,6 @@ public class PolygonUrlBuilder {
     protected Boolean adjusted;
     protected String sort;
     protected int limit;
-
 
     public PolygonUrlBuilder setCurrencyPair(String currencyPair) {
         this.currencyPair = currencyPair;
@@ -55,7 +56,16 @@ public class PolygonUrlBuilder {
     }
 
     public PolygonUrl build() {
-        return new PolygonUrl(this);
+        PolygonUrl polygonUrl = new PolygonUrl();
+        polygonUrl.setCurrencyPair(this.currencyPair);
+        polygonUrl.setMultiplier(this.multiplier);
+        polygonUrl.setFrom(this.from);
+        polygonUrl.setTo(this.to);
+        polygonUrl.setAdjusted(this.adjusted);
+        polygonUrl.setTimespan(this.timespan);
+        polygonUrl.setSort(this.sort);
+        polygonUrl.setLimit(this.limit);
+        return polygonUrl;
     }
 
 }

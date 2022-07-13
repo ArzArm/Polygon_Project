@@ -2,6 +2,7 @@ package com.example.spring.service;
 
 import com.example.spring.builder.PolygonUrl;
 import com.example.spring.entity.EuroToUsd;
+import com.example.spring.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
@@ -27,6 +28,9 @@ public class PolygonClient {
                 + polygonUrl.getMultiplier() + "/" + polygonUrl.getTimespan() + "/" + polygonUrl.getFrom() + "/" + polygonUrl.getTo() + "?adjusted=" + polygonUrl.getAdjusted()
                 + "&sort=" + polygonUrl.getSort() + "&limit=" + polygonUrl.getLimit() + "&apiKey=" + apiKey, String.class);
         JSONObject jsonObject = new JSONObject(response);
+        if(jsonObject.get("status").equals("DELAYED")){
+            throw new ResourceNotFoundException("Not found any rate between date '" + polygonUrl.getFrom() + "' to '" + polygonUrl.getTo() + "'");
+        }
         JSONArray resultsArray = new JSONArray(jsonObject.get("results").toString());
         List<EuroToUsd> euroToUsdList = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();

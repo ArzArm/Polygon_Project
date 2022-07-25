@@ -1,0 +1,3 @@
+INSERT INTO security.users ( username, password, role) VALUES ('user1', '$2a$12$E1HNpWbX7WxSvPzFBwCol.fVdQvnuP7dEUavCELjRhZPoWG9rqZ9e', 'user');
+INSERT INTO security.users ( username, password, role) VALUES ('user2', '$2a$12$E1HNpWbX7WxSvPzFBwCol.fVdQvnuP7dEUavCELjRhZPoWG9rqZ9e', 'user');
+INSERT INTO security.users ( username, password, role) VALUES ('admin', '$2a$12$E1HNpWbX7WxSvPzFBwCol.fVdQvnuP7dEUavCELjRhZPoWG9rqZ9e', 'admin');

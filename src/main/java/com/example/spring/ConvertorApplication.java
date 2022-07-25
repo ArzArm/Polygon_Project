@@ -9,13 +9,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
 @SpringBootApplication
-public class JpaApplication implements CommandLineRunner {
+public class ConvertorApplication implements CommandLineRunner {
 
     @Autowired
     ConvertorService convertorService;
     public static void main(String[] args) {
 
-        SpringApplication.run(JpaApplication.class, args);
+        SpringApplication.run(ConvertorApplication.class, args);
 
     }
 

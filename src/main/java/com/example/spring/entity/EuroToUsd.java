@@ -17,7 +17,7 @@ import java.sql.Date;
 @Table (name = "eurotousd", schema = "convertor")
 public class EuroToUsd {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column (name = "averageprice", nullable = false)
     @JsonProperty("vw")

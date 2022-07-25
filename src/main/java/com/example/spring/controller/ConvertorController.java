@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,6 +26,7 @@ public class ConvertorController {
 
     @Autowired
     private ConvertorService convertorService;
+
 
     @ApiOperation(value = "Filter EuroToUsd by period", notes = "Returns list of EuroToUsd")
     @ApiResponse(code = 404, message = "Not found any rate")
@@ -43,7 +45,15 @@ public class ConvertorController {
         }
         return euroToUsdList;
     }
+    @GetMapping("/home")
+    public String getHomePage(Principal principal){
+        return "Polygon Convertor HomPage " + principal.getName();
+    }
 
+    @GetMapping("/start")
+    public String getStartPage(){
+        return "Welcome Polygon Convertor";
+    }
     @ApiOperation(value = "Update any price of EuroToUsd", notes = "Filter EuroToUsd by date")
     @ApiResponse(code = 404, message = "Not found any rate")
     @ApiImplicitParams({
@@ -104,6 +114,7 @@ public class ConvertorController {
         return convertorService.findBySearchCriteria(spec);
 
     }
+
 
 
 }
